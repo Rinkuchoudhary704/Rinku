@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Appointment</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      text-align: center;
+    }
+    .container {
+      width: 50%;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    .nav {
+            background: #007bff;
+            padding: 15px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav .logo {
+            font-weight: bold;
+            font-size: 24px;
+            margin-left: 15px;
+        }
+
+        .nav a,
+        .nav button {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+    h2 {
+      font-size: 26px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    input:focus, select:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      width: 100%;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .confirmation {
+      color: green;
+      font-weight: bold;
+      display: none;
+      margin-top: 15px;
+    }
+    #appointmentList {
+      margin-top: 40px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    .appointment-item {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .appointment-item p {
+      margin: 5px 0;
+    }
+    .cancel-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="logo">DocFinder</div><div class="nav">
+      <div class="logo">DocFinder</div>
+      <div class="nav-links">
+          <a href="/dashboard">Home</a>
+          <a href="/form">User Form</a>
+          <a href="/feedback">Feedback</a>
+          <a href="/appointment">Book Appointment</a>
+          <button class="logout" onclick="logout()">Logout</button>
+      </div>
+  </div>
+  
+    <div>
+      <a href="/dashboard">Home</a>
+      <a href="/form">User Form</a>
+      <a href="/feedback">Feedback</a>
+      <a href="/appointment">Book Appointment</a>
+      <button id="logoutBtn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container" id="appointmentSection">
+    <h2>Book an Appointment</h2>
+    <form id="appointmentForm">
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" placeholder="Enter your name" maxlength="50" required />
+      </div>
+      <div class="form-group">
+        <label for="doctor">Select a Doctor</label>
+        <select id="doctor" required>
+          <option value="">Select a Doctor</option>
+          <option value="Dr. A. Sharma - Cardiology">Dr. A. Sharma (Cardiology)</option>
+          <option value="Dr. B. Gupta - Endocrinology">Dr. B. Gupta (Endocrinology)</option>
+          <option value="Dr. C. Menon - Pulmonology">Dr. C. Menon (Pulmonology)</option>
+          <option value="Dr. D. Singh - Dermatology">Dr. D. Singh (Dermatology)</option>
+          <option value="Dr. E. Rao - Neurology">Dr. E. Rao (Neurology)</option>
+          <option value="Dr. F. Khan - Orthopedics ">Dr. F. Khan (Orthopedics)</option>
+          <option value="Dr. G. Patil - Gastroenterology ">Dr. G. Patil (Gastroenterology)</option>
+          <option value="Dr. H. Reddy - Oncology">Dr. H. Reddy (Oncology)</option>
+          <option value="Dr. I. Joshi - Ophthalmology">Dr. I. Joshi (Ophthalmology)</option>
+          <option value="Dr. J. Pillai - Psychiatry">Dr. J. Pillai (Psychiatry)</option>
+          <option value="Dr. K. Kumar - Urology">Dr. K. Kumar (Urology)</option>
+          <option value="Dr. L. Mehta - Rheumatology">Dr. L. Mehta (Rheumatology)</option>
+          <option value="Dr. M. Verma - Hematology">Dr. M. Verma (Hematology)</option>
+          <option value="Dr. N. Desai - Pediatrics">Dr. N. Desai (Pediatrics)</option>
+          <option value="Dr. O. Bhat - Infectious Diseases">Dr. O. Bhat (Infectious Diseases)</option>
+          <option value="Dr. P. Kapoor - Nephrology">Dr. P. Kapoor (Nephrology)</option>
+          <option value="Dr. Q. Iyer - Hepatology">Dr. Q. Iyer (Hepatology)</option>
+          <option value="Dr. R. Malhotra - ENT">Dr. R. Malhotra (ENT)</option>
+          <option value="Dr. S. Thomas - Gynecology">Dr. S. Thomas (Gynecology)</option>
+          <option value="Dr. T. Banerjee - Immunology">Dr. T. Banerjee (Immunology)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="date">Select Date</label>
+        <input type="date" id="date" required />
+      </div>
+      <div class="form-group">
+        <label for="time">Select Time</label>
+        <input type="time" id="time" required />
+      </div>
+      <button type="submit">Book Appointment</button>
+    </form>
+    <p id="confirmation" class="confirmation">Your appointment has been booked successfully!</p>
+  </div>
+
+  <!-- Appointment List Section -->
+  <div id="appointmentList"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      const appointmentList = document.getElementById("appointmentList");
+      let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+
+      async function checkAuth() {
+        try {
+          const res = await fetch("/check_auth");
+          const data = await res.json();
+          if (!data.authenticated) {
+            document.getElementById("appointmentSection").style.display = "none";
+            alert("Please log in to book an appointment.");
+            window.location.href = "/login";
+          }
+        } catch (err) {
+          console.error("Error during auth check:", err);
+        }
+      }
+
+      function renderAppointments() {
+        appointmentList.innerHTML = "<h2 style='text-align:center;'>Your Appointments</h2>";
+        if (appointments.length === 0) {
+          appointmentList.innerHTML += "<p style='text-align:center;'>No appointments booked yet.</p>";
+          return;
+        }
+
+        appointments.forEach((appt, index) => {
+          const item = document.createElement("div");
+          item.className = "appointment-item";
+          item.innerHTML = `
+            <p><strong>Name:</strong> ${appt.name}</p>
+            <p><strong>Doctor:</strong> ${appt.doctor}</p>
+            <p><strong>Date:</strong> ${appt.date}</p>
+            <p><strong>Time:</strong> ${appt.time}</p>
+            <button class="cancel-btn" onclick="cancelAppointment(${index})">Cancel</button>
+          `;
+          appointmentList.appendChild(item);
+        });
+      }
+
+      window.cancelAppointment = function(index) {
+        appointments.splice(index, 1);
+        localStorage.setItem("appointments", JSON.stringify(appointments));
+        renderAppointments();
+      };
+
+      document.getElementById("appointmentForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const name = document.getElementById("name").value.trim();
+        const doctor = document.getElementById("doctor").value;
+        const date = document.getElementById("date").value;
+        const time = document.getElementById("time").value;
+        const confirmation = document.getElementById("confirmation");
+
+        if (!name || !doctor || !date || !time) {
+          alert("Please fill in all fields.");
+          return;
+        }
+
+        const newAppointment = { name, doctor, date, time };
+        appointments.push(newAppointment);
+        localStorage.setItem("appointments", JSON.stringify(appointments));
+        renderAppointments();
+
+        confirmation.style.display = "block";
+        confirmation.textContent = "Your appointment has been booked successfully!";
+        setTimeout(() => {
+          confirmation.style.display = "none";
+        }, 4000);
+
+        document.getElementById("appointmentForm").reset();
+      });
+
+      function logout() {
+        localStorage.removeItem("isAuthenticated");
+        window.location.href = "/";
+      }
+
+      checkAuth();
+      renderAppointments();
+    });
+  </script>
+</body>
+</html>

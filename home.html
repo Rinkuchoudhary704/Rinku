@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doctor Finder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      margin: 0;
+    }
+
+    .container {
+      width: 80%;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .nav {
+      background: #007bff;
+      padding: 15px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav .logo {
+      font-weight: bold;
+      font-size: 24px;
+      margin-left: 15px;
+    }
+
+    .nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-size: 18px;
+      display: none;
+    }
+
+    .hero {
+      background: linear-gradient(to right, #007bff, #0056b3);
+      color: white;
+      padding: 50px;
+      border-radius: 10px;
+      margin: 20px auto;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    .features {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 30px;
+    }
+
+    .feature-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 30%;
+    }
+
+    .feature-box h3 {
+      color: #007bff;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+
+  <script>
+    let loggedIn = false;
+
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch("/api/check_login")
+        .then((response) => response.json())
+        .then((data) => {
+          loggedIn = data.logged_in;
+
+          if (loggedIn) {
+            document.getElementById("logout").style.display = "inline";
+            document.getElementById("form").style.display = "inline";
+            document.getElementById("feedback").style.display = "inline";
+            document.getElementById("appointment").style.display = "inline";
+          } else {
+            document.getElementById("login").style.display = "inline";
+            document.getElementById("signup").style.display = "inline";
+          }
+        });
+
+      // Protect all links if not logged in
+      const protectedLinks = document.querySelectorAll(".protected-link");
+
+      protectedLinks.forEach(link => {
+        link.addEventListener("click", function (e) {
+          if (!loggedIn) {
+            e.preventDefault();
+            alert("You must log in to use this feature.");
+            window.location.href = "/login";
+          }
+        });
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="nav">
+    <div class="logo">DocFinder</div>
+    <div>
+      <a href="/" style="display: inline;">Home</a>
+      <a href="/form" id="form" class="protected-link">User Form</a>
+      <a href="/feedback" id="feedback" class="protected-link">Feedback</a>
+      <a href="/appointment" id="appointment" class="protected-link">Book Appointment</a>
+      <a href="/login" id="login">Login</a>
+      <a href="/signup" id="signup">Signup</a>
+      <a href="/logout" id="logout" style="display: none;">Logout</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Welcome to DocFinder</h1>
+    <p>Your personal healthcare assistant for finding doctors based on location and symptoms.</p>
+    <a href="/form" class="protected-link"><button>Find a Doctor</button></a>
+  </div>
+
+  <div class="container">
+    <div class="features">
+      <div class="feature-box">
+        <h3>Quick Search</h3>
+        <p>Easily find doctors near you with our smart search feature.</p>
+        <a href="/form" class="protected-link"><button>Try Now</button></a>
+      </div>
+      <div class="feature-box">
+        <h3>Appointment Booking</h3>
+        <p>Book doctor appointments online without hassle.</p>
+        <a href="/appointment" class="protected-link"><button>Book Now</button></a>
+      </div>
+      <div class="feature-box">
+        <h3>Medication Reminders</h3>
+        <p>Stay on track with your medication schedules with timely alerts.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

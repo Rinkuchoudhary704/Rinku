@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Feedback</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f4f4; text-align: center; margin: 0; }
+        .container { width: 80%; margin: auto; padding: 20px; }
+        .nav { background: #007bff; padding: 15px; color: white; display: flex; align-items: center; justify-content: space-between; }
+        .nav .logo { font-weight: bold; font-size: 24px; margin-left: 15px; }
+        .nav a { color: white; margin: 0 15px; text-decoration: none; font-size: 18px; }
+        .hero { background: linear-gradient(to right, #007bff, #0056b3); color: white; padding: 30px; border-radius: 10px; margin: 20px auto; width: 60%; }
+        .hero h1 { font-size: 28px; margin-bottom: 10px; }
+        .hero p { font-size: 16px; }
+        .form-container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        input, textarea { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: #007bff; outline: none; }
+        button { background: #007bff; color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; width: 100%; transition: 0.3s; }
+        button:hover { background: #0056b3; }
+        .feedback-list { text-align: left; margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .feedback-item { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); margin-bottom: 10px; transition: 0.3s; }
+        .feedback-item:hover { transform: scale(1.02); }
+        #successMessage { color: green; margin-top: 10px; display: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <<div class="nav">
+        <div class="logo">DocFinder</div>
+        <div class="nav-links">
+            <a href="/dashboard">Home</a>
+            <a href="/form">User Form</a>
+            <a href="/feedback">Feedback</a>
+            <a href="/appointment">Book Appointment</a>
+            <button class="logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    
+    <div class="hero">
+        <h1>Submit Feedback</h1>
+        <p>We value your input! Let us know how we can improve.</p>
+    </div>
+
+    <div class="form-container" id="feedbackSection">
+        <form id="feedbackForm">
+            <div class="form-group">
+                <label for="userName">Your Name</label>
+                <input type="text" id="userName" placeholder="Enter your name..." maxlength="50" required>
+            </div>
+            <div class="form-group">
+                <label for="feedbackText">Your Feedback</label>
+                <textarea id="feedbackText" rows="5" placeholder="Enter your feedback..." maxlength="500" required></textarea>
+            </div>
+            <button type="submit">Submit Feedback</button>
+            <div id="successMessage">Feedback submitted successfully!</div>
+        </form>
+    </div>
+
+    <h1>User Feedbacks</h1>
+    <div id="feedbackList" class="feedback-list"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const feedbackList = document.getElementById("feedbackList");
+            const successMessage = document.getElementById("successMessage");
+            let storedFeedbacks = JSON.parse(localStorage.getItem("feedbacks")) || [];
+
+            function renderFeedbacks() {
+                feedbackList.innerHTML = "";
+                storedFeedbacks.forEach((feedback) => {
+                    const feedbackItem = document.createElement("div");
+                    feedbackItem.classList.add("feedback-item");
+                    feedbackItem.innerHTML = `<p><strong>${feedback.name}:</strong> ${feedback.text}</p>`;
+                    feedbackList.appendChild(feedbackItem);
+                });
+            }
+
+            async function checkAuth() {
+                try {
+                    const res = await fetch('/check_auth');
+                    const data = await res.json();
+                    if (!data.authenticated) {
+                        document.getElementById("feedbackSection").style.display = "none";
+                        alert("Please log in to submit feedback.");
+                        window.location.href = "/login";
+                    }
+                } catch (error) {
+                    console.error("Auth check failed:", error);
+                    
+                }
+            }
+
+            document.getElementById("feedbackForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                const userName = document.getElementById("userName").value.trim();
+                const feedbackText = document.getElementById("feedbackText").value.trim();
+
+                if (userName === "" || feedbackText === "") {
+                    alert("Both fields are required.");
+                    return;
+                }
+
+                const newFeedback = { name: userName, text: feedbackText };
+                storedFeedbacks.push(newFeedback);
+                localStorage.setItem("feedbacks", JSON.stringify(storedFeedbacks));
+
+                renderFeedbacks();
+                document.getElementById("feedbackForm").reset();
+                successMessage.style.display = "block";
+                setTimeout(() => successMessage.style.display = "none", 3000);
+            });
+
+            function logout() {
+                localStorage.removeItem("isAuthenticated");
+                window.location.href = "/";
+            }
+
+            checkAuth();
+            renderFeedbacks();
+        });
+    </script>
+</body>
+</html>

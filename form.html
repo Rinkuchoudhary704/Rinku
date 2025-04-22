@@ -1,0 +1,122 @@
+<!-- templates/form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doctor Finder - Find a Doctor</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; margin: 0; }
+    .container { width: 80%; margin: auto; padding: 20px; }
+    .nav { background: #007bff; padding: 15px; color: white; display: flex; align-items: center; justify-content: space-between; }
+    .nav .logo { font-weight: bold; font-size: 24px; margin-left: 15px; }
+    .nav a { color: white; margin: 0 15px; text-decoration: none; font-size: 18px; }
+    .hero { background: linear-gradient(to right, #007bff, #0056b3); color: white; padding: 50px; border-radius: 10px; margin: 20px auto; }
+    .hero h1 { font-size: 36px; }
+    .hero p { font-size: 18px; margin-top: 10px; }
+    .form-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin-top: 30px; }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    label { font-weight: bold; display: block; margin-bottom: 5px; }
+    input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
+    button { background: #007bff; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; width: 100%; }
+    button:hover { background: #0056b3; }
+    .error, .result-message { padding: 10px; margin: 10px 0; border-radius: 5px; display: none; }
+    .error { color: #e74c3c; background: #fadbd8; }
+    .result-message { color: #2c3e50; background: #d5f5e3; }
+    .results { text-align: left; margin-top: 20px; }
+    .doctor-card { background: #fff; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+  </style>
+  <!-- <script>
+    window.onload = function () {
+      fetch(include)
+        .then(response => response.json())
+        .then(data => {
+          if (!data.authenticated) {
+            window.location.href = '/login';
+          }
+        });
+    };
+  </script> -->
+</head>
+<body>
+  <div class="nav">
+    <div class="logo">DocFinder</div>
+    <div>
+      <a href="/dashboard">Home</a>
+      <a href="/form">User Form</a>
+      <a href="/feedback">Feedback</a>
+      <a href="/appointment">Book Appointment</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Find a Doctor Near You</h1>
+    <p>Enter your location and symptoms to find the right healthcare professional.</p>
+  </div>
+
+  <div class="container">
+    <div class="form-container">
+      <div class="error" id="error"></div>
+      <div class="result-message" id="resultMessage"></div>
+      <form id = "doctor-form">
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" id="location" name="Location" placeholder="e.g., Kothrud, Pune" required/>
+      </div>
+      <div class="form-group">
+        <label for="symptoms">Symptoms</label>
+        <textarea id="symptoms" name="Symptoms" rows="3" placeholder="Enter your symptoms (e.g., cough, fever)" required></textarea>
+      </div>
+      <button type="submit">Find Doctors</button>
+      </form>
+      <div class="results" id= "results" name="results"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('doctor-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+    
+      const location = document.getElementById('location').value;
+      const symptoms = document.getElementById('symptoms').value;
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+    
+      const response = await fetch('/api/doctors', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ Location: location, Symptoms: symptoms })
+      });
+    
+      const data = await response.json();
+      console.log("Doctor response:", data);
+    
+      if (!data.success) {
+        resultsDiv.innerHTML = `<div class="error">${data.error}</div>`;
+      } else if (data.doctors.length === 0) {
+        resultsDiv.innerHTML = `<div class="result-message">No matching doctors found.</div>`;
+      } else {
+        data.doctors.forEach(doc => {
+          resultsDiv.innerHTML += `
+            <div class="doctor-card">
+              <strong>${doc.name}</strong><br>
+              Specialty: ${doc.specialty}<br>
+              Clinic: ${doc.clinic}<br>
+              Contact: ${doc.contact}<br>
+              Location: ${doc.location}<br>
+              Rating: ${doc.ratings}
+            </div>`;
+        });
+      }
+    });
+    </script>
+    
+    
+    
+  
+</body>
+</html>
